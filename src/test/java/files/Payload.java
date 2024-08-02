@@ -10,4 +10,10 @@ public class Payload {
                 "\"author\":\"John foe\"\n" +
                 "}";
     }
+
+    public static String deleteBooksBody(String isbn, String aisle) {
+        return "{\n" +
+                "    \"ID\": \"" + isbn + aisle + "\"\n" +
+                "}\n";
+    }
 }

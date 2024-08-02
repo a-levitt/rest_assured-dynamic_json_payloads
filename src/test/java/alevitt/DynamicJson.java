@@ -9,9 +9,14 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
-//import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalTo;
 
 public class DynamicJson {
+
+    @DataProvider(name="BooksData")
+    public Object[][] getData() {
+        return new Object[][] {{"bdd", "666"}, {"tdd", "510"}, {"rpc", "660"}};
+    }
 
     @Test(dataProvider = "BooksData")
     public void addBook(String isbn, String aisle) {
@@ -28,7 +33,7 @@ public class DynamicJson {
                 //.log().all()
                 .assertThat()
                     .statusCode(200)
-                    //.body("Msg", equalTo("successfully added"))
+                    .body("Msg", equalTo("successfully added"))
                 .extract().response().asString()
         ;
 
@@ -38,8 +43,26 @@ public class DynamicJson {
         System.out.println("New book created with ID: " + newBookID);
     }
 
-    @DataProvider(name="BooksData")
-    public Object[][] getData() {
-        return new Object[][] {{"bdd", "666o510"}, {"tdd", "667o510"}, {"grpc", "668o51o"}};
+    @Test(dataProvider = "BooksData")
+    public void deleteBook(String isbn, String aisle) {
+        RestAssured.baseURI = "http://216.10.245.166";
+
+        given()
+            //.log().all()
+            .header("Content-Type", "application/json")
+            .body(Payload.deleteBooksBody(isbn, aisle))
+        .when()
+            .post("/Library/DeleteBook.php")
+        .then()
+            //.log().all()
+            .assertThat()
+                .statusCode(200)
+                .body("msg", equalTo("book is successfully deleted"))
+            //.extract().response().asString()
+        ;
+
+        System.out.println("Book was deleted.");
     }
+
+
 }
