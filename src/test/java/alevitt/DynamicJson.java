@@ -20,7 +20,7 @@ public class DynamicJson {
         given()
                 //.log().all()
                 .header("Content-Type", "application/json")
-                .body(Payload.addBookBody())
+                .body(Payload.addBookBody("bcd", "667o510"))
         .when()
                 .post("Library/Addbook.php")
         .then()
